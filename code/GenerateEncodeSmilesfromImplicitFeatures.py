@@ -3,7 +3,7 @@ This file contains source code to build and train a deep learning model to gener
 implicit ligand and target features
 
 """
-
+import keras
 from keras.layers import Input, Dense
 from keras.models import Model
 from keras.layers import merge
@@ -11,6 +11,8 @@ import pandas as pd
 import numpy as np
 from keras.models import Sequential
 from ConfigFile import getProperty,reloadProperties
+from keras import losses
+from keras import optimizers
 
 
 def loadTrainingFile():
@@ -29,7 +31,9 @@ def constructModel():
     x2 = Dense(100, activation='linear')(molregnoInput)
     x2 = Dense(150, activation='linear')(x2)
 
-    mergedLayer = merge([x1, x2], concat_axis=1, mode="concat")
+    #mergedLayer = merge([x1, x2], concat_axis=1, mode="concat")
+    mergedLayer = keras.layers.Concatenate()([x1,x2])
+    #mergedLayer = keras.layers.Add()([x1, x2])
     ####merge function is depreceted - change it next revision
 
     x = Dense(200, activation='linear')(mergedLayer)
@@ -40,10 +44,14 @@ def constructModel():
 
     return  model
 
+
+
 def trainModel(model, targetArr , molregNoArr, latfeatureArr):
 
     print("Training model")
-    model.compile(optimizer='adadelta', loss='mse')
+    optimizerFunction = optimizers.Adam(lr=.0001)
+    model.compile(optimizer=optimizerFunction, loss='mse' ,
+                  metrics=['mae', 'acc'])
     train_history = model.fit([targetArr, molregNoArr], latfeatureArr,
                               epochs=100,
                               batch_size=256,
@@ -52,7 +60,11 @@ def trainModel(model, targetArr , molregNoArr, latfeatureArr):
     return  train_history
 
 
+
+
 if __name__ == '__main__':
+
+
 
     print("start : Generate encoded smiles string from implicit fingerprints")
     encoded_feature_size = int(getProperty("encoded.feature.size"))
@@ -79,5 +91,7 @@ if __name__ == '__main__':
     model.save("../model/Implicit_to_Latent.model")
     with open("../model/trainingHistory.dict","w") as fp:
         fp.write(str(train_history.history))
+
+
 
 

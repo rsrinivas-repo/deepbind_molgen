@@ -64,8 +64,8 @@ listInvalidMols=list()
 
 print("Generate valid and invalid encoded vectors for GAN")
 invalidCnts=0
-#for i in range(0,encodedFeaturesArray.shape[0]):
-for i in range(0,5):
+for i in range(0,encodedFeaturesArray.shape[0]):
+#for i in range(0,5):
     sys.stdout.write(".")
     sys.stdout.flush()
     reconstructed_molecule = decode_latent_molecule(encodedFeaturesArray[i, :], modelVae,

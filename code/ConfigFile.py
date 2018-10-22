@@ -1,17 +1,19 @@
-import ConfigParser
+import configparser as ConfigParser
 
 global config
+
+strFilePath= "data.properties"
 def getProperty(propName):
 
     return config.get("deepbind",propName)
 
 
 def reloadProperties():
-    config.read('/Users/raghuramsrinivas/localdrive/education/deepbind/paper2/code/data.properties')
+    config.read(strFilePath)
 
 print("Loading property file")
 config = ConfigParser.RawConfigParser()
-config.read('/Users/raghuramsrinivas/localdrive/education/deepbind/paper2/code/data.properties')
+config.read(strFilePath)
 
 
 if __name__ == '__main__':
