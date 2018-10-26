@@ -32,8 +32,10 @@ dfAllData = pd.read_csv(ConfigFile.getProperty("implicit.data.file"))
 
 print("Shape of datafile %s"%str(dfAllData.shape))
 
-dfAllData.columns
+dfAllData.drop_duplicates(['molregno'],keep='first',inplace=True)
+dfAllData.reset_index(inplace=True)
 
+print("Shape of datafile after removing duplicate molecules :%d"%dfAllData.shape[0])
 
 
 encodedFeatures = ["%d_latfeatures"%i for i in range(0,int(ConfigFile.getProperty("encoded.feature.size")))]
@@ -42,6 +44,17 @@ def getDFWithEncodedFeatures():
     listFeatures = encodedFeatures+["smiles"]
 
     return  dfAllData[listFeatures]
+
+
+def getCommaSepString(x):
+    xstr = np.array_str(x.reshape(292))
+    xstr=xstr.replace("[","")
+    xstr=xstr.replace("]","")
+    xstr=xstr.replace("\n","")
+    
+    return xstr+"\n"
+
+
 
 
 dfEncodedFeatures = getDFWithEncodedFeatures()
@@ -64,6 +77,12 @@ listInvalidMols=list()
 
 print("Generate valid and invalid encoded vectors for GAN")
 invalidCnts=0
+
+fpValidMols = open("../data/validEncodedSMILES.csv","w")
+
+fpinvalidMols = open("../data/invalidEncodedSMILES.csv","w")
+
+
 for i in range(0,encodedFeaturesArray.shape[0]):
 #for i in range(0,5):
     sys.stdout.write(".")
@@ -72,6 +91,11 @@ for i in range(0,encodedFeaturesArray.shape[0]):
                                                     charset, mVAE_helper.latent_dim)
 
     listValidMols.append(encodedFeaturesArray[i,:])
+    
+    fpValidMols.writelines(getCommaSepString(encodedFeaturesArray[i,:]))
+    
+    
+        
     invalidCnts=0
     ## Generate encoded values at random and save them as valid or invalid for GANs
 
@@ -87,10 +111,14 @@ for i in range(0,encodedFeaturesArray.shape[0]):
             mol = Chem.MolFromSmiles(smiles)
             if mol:
                 listValidMols.append(lm)
+                fpValidMols.writelines(getCommaSepString(lm))
             else:
-                if invalidCnts<30:
+                if invalidCnts<10:
                     listInvalidMols.append(lm)
                     invalidCnts+=1
+                    fpinvalidMols.writelines(getCommaSepString(lm))
+                else:
+                    continue
         except:
             continue
 
@@ -99,5 +127,9 @@ print("# of valid mols generated  %d"%validMolsArray.shape[0])
 np.save("../data/gan_data_valid",validMolsArray,allow_pickle=False)
 
 invalidMolsArray = np.array(listInvalidMols)
-print("# of valid mols generated  %d"%invalidMolsArray.shape[0])
+print("# of invalid mols generated  %d"%invalidMolsArray.shape[0])
 np.save("../data/gan_data_invalid",invalidMolsArray,allow_pickle=False)
+
+fpValidMols.close()
+fpinvalidMols.close()
+

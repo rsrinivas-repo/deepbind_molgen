@@ -1,0 +1,27 @@
+Using TensorFlow backend.
+Traceback (most recent call last):
+  File "TrainGANModel.py", line 5, in <module>
+    from keras.datasets import mnist
+  File "/users/rsrinivas/miniconda2/envs/my-rdkit-env/lib/python3.6/site-packages/keras/__init__.py", line 3, in <module>
+    from . import utils
+  File "/users/rsrinivas/miniconda2/envs/my-rdkit-env/lib/python3.6/site-packages/keras/utils/__init__.py", line 6, in <module>
+    from . import conv_utils
+  File "/users/rsrinivas/miniconda2/envs/my-rdkit-env/lib/python3.6/site-packages/keras/utils/conv_utils.py", line 9, in <module>
+    from .. import backend as K
+  File "/users/rsrinivas/miniconda2/envs/my-rdkit-env/lib/python3.6/site-packages/keras/backend/__init__.py", line 89, in <module>
+    from .tensorflow_backend import *
+  File "/users/rsrinivas/miniconda2/envs/my-rdkit-env/lib/python3.6/site-packages/keras/backend/tensorflow_backend.py", line 5, in <module>
+    import tensorflow as tf
+  File "/users/rsrinivas/miniconda2/envs/my-rdkit-env/lib/python3.6/site-packages/tensorflow/__init__.py", line 28, in <module>
+    from tensorflow.python import pywrap_tensorflow  # pylint: disable=unused-import
+  File "/users/rsrinivas/miniconda2/envs/my-rdkit-env/lib/python3.6/site-packages/tensorflow/python/__init__.py", line 72, in <module>
+    from tensorflow.python.ops.standard_ops import *
+  File "/users/rsrinivas/miniconda2/envs/my-rdkit-env/lib/python3.6/site-packages/tensorflow/python/ops/standard_ops.py", line 94, in <module>
+    from tensorflow.python.ops.template import *
+  File "<frozen importlib._bootstrap>", line 971, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 955, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 665, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 674, in exec_module
+  File "<frozen importlib._bootstrap_external>", line 764, in get_code
+  File "<frozen importlib._bootstrap_external>", line 833, in get_data
+KeyboardInterrupt

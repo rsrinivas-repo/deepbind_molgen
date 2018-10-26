@@ -24,19 +24,22 @@ def constructModel():
 
     print("Size of latent dimensions %d"%encoded_feature_size)
     targetInput = Input(shape=(50,))
-    x1 = Dense(100, activation='linear')(targetInput)
-    x1 = Dense(150, activation='linear')(x1)
+    x1 = Dense(75, activation='linear')(targetInput)
+    x1 = Dense(100, activation='linear')(x1)
 
     molregnoInput = Input(shape=(50,))
-    x2 = Dense(100, activation='linear')(molregnoInput)
-    x2 = Dense(150, activation='linear')(x2)
+    x2 = Dense(75, activation='linear')(molregnoInput)
+    x2 = Dense(100, activation='linear')(x2)
+
 
     #mergedLayer = merge([x1, x2], concat_axis=1, mode="concat")
     mergedLayer = keras.layers.Concatenate()([x1,x2])
     #mergedLayer = keras.layers.Add()([x1, x2])
     ####merge function is depreceted - change it next revision
 
-    x = Dense(200, activation='linear')(mergedLayer)
+    x = Dense(150, activation='linear')(mergedLayer)
+    x = Dense(175, activation='linear')(x)
+    x = Dense(200, activation='linear')(x)
     x = Dense(250, activation='linear')(x)
     outputLayer = Dense(encoded_feature_size, activation='linear')(x)
 
@@ -49,11 +52,11 @@ def constructModel():
 def trainModel(model, targetArr , molregNoArr, latfeatureArr):
 
     print("Training model")
-    optimizerFunction = optimizers.Adam(lr=.0001)
+    optimizerFunction = optimizers.Adam(lr=.001)
     model.compile(optimizer=optimizerFunction, loss='mse' ,
                   metrics=['mae', 'acc'])
     train_history = model.fit([targetArr, molregNoArr], latfeatureArr,
-                              epochs=100,
+                              epochs=5,
                               batch_size=256,
                               shuffle=True)
 
