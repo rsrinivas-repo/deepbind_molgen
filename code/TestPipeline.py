@@ -1,41 +1,36 @@
 import pandas as pd
 import numpy as np
-from  keras.models import load_model
+from keras.models import load_model
+import mVAE_helper
+import ConfigFile
 
+# model = load_model("../model/gan_gen.pkl")
 
-model = load_model("../model/gan_gen.pkl")
-
+model = load_model("/Users/raghuramsrinivas/localdrive/education/deepbind/paper2/model/gan_gen.pkl")
 noise = np.random.normal(0, 1, (5, 292))
 
-out = model.predict(noise) 
+out = model.predict(noise)
 
-print(out)
+# print(out)
 
-
-import json
-from rdkit import Chem
-from rdkit.Chem import Draw
-from rdkit.Chem.Draw import IPythonConsole
-from mVAE.model import MoleculeVAE
-from mVAE.utils import encode_smiles, decode_latent_molecule, interpolate, get_unique_mols
-
-from rdkit import Chem
-from rdkit import RDLogger
-import mVAE_helper
-
-
-modelVae = mVAE_helper.loadmVAEModel()
-
-with open(mVAE_helper.charset_file, 'r') as outfile:
-    charset = json.load(outfile)
-
+"""
 for i in range(0, out.shape[0]):
                                                     
-	smiles=decode_latent_molecule(out[i,:], modelVae,
-                                       charset, mVAE_helper.latent_dim)
-                                       
-	mol = Chem.MolFromSmiles(smiles)
-
-	print(mol)
+	retStr = mVAE_helper.isValidEncoding(out[i,:])
+	print(retStr)
 
 print("Done.")
+"""
+
+featuresFile = pd.read_csv(ConfigFile.getProperty("implicit.data.file"))
+
+encodedColNames = ["%d_latfeatures" % i for i in range(0,
+                                                       int(ConfigFile.getProperty("encoded.feature.size")))]
+
+for i in range(0, 40):
+    tempArr = featuresFile.loc[i, encodedColNames]
+    print(mVAE_helper.isValidEncoding(tempArr))
+print (tempArr.shape)
+
+featuresFile.loc[40, encodedColNames]
+mVAE_helper.isValidEncoding(tempArr)

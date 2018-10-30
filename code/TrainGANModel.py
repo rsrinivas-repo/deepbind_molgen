@@ -107,7 +107,8 @@ class GAN(object):
 
             
 if __name__ == '__main__':
-    
+
+    print("Inside code to train GAN Model")
 
     validMols = np.load("../data/gan_data_valid.npy")
     #fileName = "../data/validEncodedSMILES.csv"
@@ -141,7 +142,7 @@ if __name__ == '__main__':
 
 
     gan = GAN()
-    gan.train(x_train)   
+    gan.train(x_train,epochs=10)
  #gan.train(x_train, epochs=4, batch =10, save_interval = 100)
     gan.G.save("../model/gan_gen.pkl")
 
