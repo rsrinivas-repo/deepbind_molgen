@@ -8,6 +8,7 @@ from keras.layers import BatchNormalization
 from keras.layers.advanced_activations import LeakyReLU
 from keras.models import Sequential
 from keras.optimizers import Adam
+import ConfigFile 
 
 #import matplotlib.pyplot as plt
 #plt.switch_backend('agg')   # allows code to run without a system DISPLAY
@@ -34,7 +35,8 @@ class GAN(object):
         self.stacked_generator_discriminator = self.__stacked_generator_discriminator()
 
         self.stacked_generator_discriminator.compile(loss='binary_crossentropy', optimizer=self.optimizer)
-
+	
+        self.GenInput=pd.read_csv(ConfigFile.getProperty("invalid.gan.data"),delim_whitespace=True)
 
     def __generator(self):
         """ Declare generator """
@@ -98,9 +100,13 @@ class GAN(object):
             print(self.D.test_on_batch(x_batch,y_batch))
             # train generator
 
-            noise = np.random.normal(-1, 1, (batch, 292))
+            #noise = np.random.normal(-1, 1, (batch, 292))
+            
+            noise = self.GenInput.sample(n=batch).as_matrix()
             y_mislabled = np.ones((batch, 1))
-
+            
+            
+            
             g_loss = self.stacked_generator_discriminator.train_on_batch(noise, y_mislabled)
 
             print ('epoch: %d, [Discriminator :: d_loss: %f], [ Generator :: loss: %f]' % (cnt, d_loss[0], g_loss))
@@ -142,7 +148,7 @@ if __name__ == '__main__':
 
 
     gan = GAN()
-    gan.train(x_train,epochs=10)
+    gan.train(x_train)
  #gan.train(x_train, epochs=4, batch =10, save_interval = 100)
     gan.G.save("../model/gan_gen.pkl")
 

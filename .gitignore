@@ -1,2 +1,4 @@
 /data/*
 /code/mVAE/*
+*.log
+*.pyc
