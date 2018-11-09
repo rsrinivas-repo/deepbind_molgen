@@ -1,5 +1,7 @@
-from distutils.core import setup
-setup(name='deepbind2',
-      version='1.0',
-      py_modules=['deepbind2'],
-      )
+from setuptools import setup, find_packages
+
+setup(
+    name="deepbind2",
+    version="0.1",
+    packages=find_packages()
+)

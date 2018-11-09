@@ -11,7 +11,9 @@ import numpy as np
 from utils import ConfigFile as ConfigFile
 from keras import optimizers
 from utils import mVAE_helper
+import  os
 
+encoded_feature_size=None
 
 class GenEncodedSMILES(object):
 
@@ -87,9 +89,11 @@ class GenEncodedSMILES(object):
                                   epochs=epochs,
                                   batch_size=batch_size,
                                   shuffle=False)
-        yPred = self.model.predict([targetArr, molregNoArr])
 
-        print("Number of valid predictions %d"% len(self.valid_predictions(yPred)))
+
+        #yPred = self.model.predict([targetArr, molregNoArr])
+
+        #print("Number of valid predictions %d"% len(self.valid_predictions(yPred)))
 
         return  self.train_history
 
@@ -97,9 +101,13 @@ class GenEncodedSMILES(object):
     def saveModel(self):
 
         print("Saving model files")
-        self.model.save("../../model/Implicit_to_Latent.h5")
-        with open("../../model/trainingHistory.dict", "w") as fp:
+        strModelPath =  os.path.join( ConfigFile.getProperty("models.dir") ,"Implicit_to_Latent.h5")
+        strHistFilePath= os.path.join( ConfigFile.getProperty("models.dir") ,"trainingHistory.dict")
+        self.model.save(strModelPath)
+        with open(strHistFilePath, "w") as fp:
             fp.write(str(self.train_history.history))
+
+        return strModelPath
 
 
 
@@ -108,13 +116,9 @@ def loadTrainingFile():
     return dfAllData
 
 
-
-if __name__ == '__main__':
-
-
-
-    print("start : Generate encoded smiles string from implicit fingerprints")
-    encoded_feature_size = int(ConfigFile.getProperty("encoded.feature.size"))
+def getTrainingData() :
+    global encoded_feature_size
+    encoded_feature_size=int(ConfigFile.getProperty("encoded.feature.size"))
 
     targetCols = ["%d_target"%i for i in range(0,50)]
     molregnoCols =  ["%d_mols"%i for i in range(0,50)]
@@ -123,7 +127,7 @@ if __name__ == '__main__':
 
     dfTrainingData=loadTrainingFile()
 
-    #dfTrainingData = dfTrainingData.head(20)
+    dfTrainingData = dfTrainingData.head(20)
 
     ## Extract numpy arrays with target , mol and encoded features
     targetArr = np.asarray(dfTrainingData.as_matrix(columns=targetCols))
@@ -132,14 +136,26 @@ if __name__ == '__main__':
 
     print("Shape of training file %s"%str(dfTrainingData.shape))
 
-    genEncoder = GenEncodedSMILES()
-    #train_history = genEncoder.trainModel(targetArr[10,:],molregNoArr[10,:],latfeatureArr[10,:],epochs=1,batch_size=2)
+    return molregNoArr,targetArr,latfeatureArr
 
-    train_history = genEncoder.trainModel(targetArr, molregNoArr, latfeatureArr,epochs=2,batch_size=5)
-    """
-    for i in range(0,4):
-        print(mVAE_helper.isValidEncoding(latfeatureArr[i,:]))
-        print(latfeatureArr[i,:10])
-    """
+def trainSeqModel(epochs=5,batch_size=256):
+
+    print("start : Generate encoded smiles string from implicit fingerprints")
+
+    molregNoArr, targetArr, latfeatureArr=getTrainingData()
+
+    genEncoder = GenEncodedSMILES()
+
+    ## Train Model
+    train_history = genEncoder.trainModel(targetArr, molregNoArr, latfeatureArr,epochs,batch_size)
+
+    # Save Model
+    strModelPath = genEncoder.saveModel()
     print("end : Generate encoded smiles string from implicit fingerprints")
 
+    return strModelPath
+
+
+if __name__ == '__main__':
+
+    trainSeqModel(epochs=2,batch_size=5)

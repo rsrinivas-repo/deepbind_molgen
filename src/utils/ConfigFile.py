@@ -1,8 +1,9 @@
-import configparser as ConfigParser
+#import configparser as ConfigParser
 
+import  ConfigParser
 global config
 
-strFilePath= "./data.properties"
+strFilePath= "/Users/raghuramsrinivas/localdrive/education/deepbind/paper2/src/data.properties"
 #strFilePath=
 
 def getProperty(propName):

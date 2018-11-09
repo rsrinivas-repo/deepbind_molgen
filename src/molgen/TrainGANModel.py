@@ -8,7 +8,7 @@ from keras.layers.advanced_activations import LeakyReLU
 from keras.models import Sequential
 from keras.optimizers import Adam
 from utils import ConfigFile
-
+import os
 
 
 class GAN(object):
@@ -76,7 +76,7 @@ class GAN(object):
 
         return model
 
-    def train(self, X_train, epochs=20000, batch = 32, save_interval = 100):
+    def train(self, x_train, epochs=20000, batch = 32, save_interval = 100):
 
         for cnt in range(epochs):
 
@@ -109,41 +109,40 @@ class GAN(object):
 
             print ('epoch: %d, [Discriminator :: d_loss: %f], [ Generator :: loss: %f]' % (cnt, d_loss[0], g_loss))
 
-            
-if __name__ == '__main__':
 
-    from os import sys, path
-    sys.path.append(path.dirname(path.dirname(path.abspath(__file__))))
-
+def trainGANModel(epochs=10000, batch =32, save_interval = 100) :
     print("Inside code to train GAN Model")
 
     validMols = np.load(ConfigFile.getProperty("descriminator.valid.input"))
 
-    
-    ones = np.ones((validMols.shape[0],1))
-    validMols = np.append(validMols,ones,axis=1)
+    ones = np.ones((validMols.shape[0], 1))
+    validMols = np.append(validMols, ones, axis=1)
 
-    print("Shape of VALID array %s "%str(validMols.shape))
+    print("Shape of VALID array %s " % str(validMols.shape))
 
     invalidMols = np.load(ConfigFile.getProperty("descriminator.invalid.input"))
 
-    
-    zeros = np.zeros((invalidMols.shape[0],1))
-    invalidMols = np.append(invalidMols,zeros,axis=1)
+    zeros = np.zeros((invalidMols.shape[0], 1))
+    invalidMols = np.append(invalidMols, zeros, axis=1)
 
-    print("Shape of INVALID array %s "%str(invalidMols.shape))
-    
-    #invalidMols = np.array(random.sample(invalidMols,40000))
-    invalidMols = invalidMols[:40000,:]
-    print("Shape of INVALID array after sampling %s "%str(invalidMols.shape))
-    
-    x_train = np.append(validMols,invalidMols,axis=0)
-    print ("Shape of FULL training array %s"%str(x_train.shape))
-    #np.random.shuffle(x_train)
+    print("Shape of INVALID array %s " % str(invalidMols.shape))
 
+    # invalidMols = np.array(random.sample(invalidMols,40000))
+    invalidMols = invalidMols[:40000, :]
+    print("Shape of INVALID array after sampling %s " % str(invalidMols.shape))
+
+    x_train = np.append(validMols, invalidMols, axis=0)
+    print ("Shape of FULL training array %s" % str(x_train.shape))
 
     gan = GAN()
-    gan.train(x_train)
- #gan.train(x_train, epochs=4, batch =10, save_interval = 100)
-    gan.G.save("../model/gan_gen.pkl")
+    gan.train(x_train, epochs=4, batch =10, save_interval = 100)
+    genModelFile = os.path.join(ConfigFile.getProperty("models.dir"), "gan_gen.h5")
+    gan.G.save(genModelFile)
+    print("Generative model saved @ %s"%genModelFile)
+    return  genModelFile
+
+if __name__ == '__main__':
+
+    trainGANModel(epochs=4, batch =10, save_interval = 100)
+
 
