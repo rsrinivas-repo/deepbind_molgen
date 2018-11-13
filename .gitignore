@@ -4,3 +4,4 @@
 *.pyc
 *.zip
 /src/build/*
+*.ipynb
