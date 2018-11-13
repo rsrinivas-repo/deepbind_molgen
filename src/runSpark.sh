@@ -2,7 +2,8 @@
 START=$(date +%s)
 # do something
 # start your script work here
-python -m controller.SimulateAssays
+python -m controller.SimulateAssays  --runmode test
+
 #python -m utils.TestPipeline
 # your logic ends here
 END=$(date +%s)

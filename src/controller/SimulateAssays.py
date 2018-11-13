@@ -14,15 +14,29 @@ import  numpy as np
 import os
 import  pandas as pd
 import argparse
+from functools import partial
+import json
+import pickle
+from molgen.SmilesDecoder import  SmilesDecoder
 
-def checkifValid(input):
+
+bVar=None
+
+##This is the map method
+def checkifValid(input,bVar):
     from utils import mVAE_helper
+    from molgen.SmilesDecoder import  SmilesDecoder
 
-    decoded = mVAE_helper.isValidEncoding(input)
+    print("Inside Mapper , bVar is %s"%str(bVar))
+    #print("Inside Mapper . Type of broadcast variable is %s "%str(isinstance(bVar.value,MoleculeVAE)))
+    decoded = SmilesDecoder().isValidEncoding(bVar.value,input)
+
+
     if decoded is None :
         return  ("Invalid",1)
     return ("Valid",1)
 
+##This is the reduce method
 def calcCounts(a,b):
     return (a+b)
 
@@ -36,24 +50,11 @@ def initSpark():
     conf.setExecutorEnv("PATH",os.environ["PATH"])
     spark = SparkSession.builder.config(conf=conf).master(spark_master).getOrCreate()
 
-    zipPath ="/Users/raghuramsrinivas/localdrive/education/deepbind/paper2/src/molgen7.zip"
+    zipPath ="/Users/raghuramsrinivas/localdrive/education/deepbind/paper2/src/molgen10.zip"
     sc = spark.sparkContext
-    sc.addPyFile("/Users/raghuramsrinivas/localdrive/education/deepbind/paper2/src/molgen7.zip")
+    sc.addPyFile(zipPath)
 
     return  spark
-
-def testConfiguration():
-    featuresFile = pd.read_csv(ConfigFile.getProperty("implicit.data.file"))
-
-    encodedColNames = ["%d_latfeatures" % i for i in range(0,
-                                                           int(ConfigFile.getProperty("encoded.feature.size")))]
-
-    arr = featuresFile[encodedColNames].values
-    arr =arr[:40,:]
-
-    print(arr.shape)
-    #arr = np.random.rand(3,292)
-    parallizeAndValidate(arr)
 
 def parallizeAndValidate(arr):
 
@@ -61,8 +62,21 @@ def parallizeAndValidate(arr):
     spark = initSpark()
     rddArray = spark.sparkContext.parallelize(arr)
 
+
+    ## Init the mVAE model object and pass it as broadcast variable
+    print("Loading decoder object")
+
+    decoderObj = SmilesDecoder().initDecoderModel()
+
+    print("Done initializing decoder object")
+
+
+    sc = spark.sparkContext
+    global  bVar
+    bVar = sc.broadcast(decoderObj)
+
     print("Submitting job to Spark Mapper")
-    mappedArr = rddArray.map(checkifValid)
+    mappedArr = rddArray.map(partial(checkifValid,bVar=bVar))
 
     print("Submitting job to Spark reduceByKey")
 
@@ -70,6 +84,22 @@ def parallizeAndValidate(arr):
     print(finalVals)
 
     return  finalVals
+
+
+##Utility method to test out all configurations
+def testConfiguration():
+    featuresFile = pd.read_csv(ConfigFile.getProperty("implicit.data.file"))
+
+    encodedColNames = ["%d_latfeatures" % i for i in range(0,
+                                                           int(ConfigFile.getProperty("encoded.feature.size")))]
+
+    arr = featuresFile[encodedColNames].values
+    arr =arr[:1000,:]
+
+    print(arr.shape)
+
+    parallizeAndValidate(arr)
+
 
 if __name__ == '__main__':
 
@@ -114,15 +144,16 @@ if __name__ == '__main__':
 
         print("Train GAN Model and validate")
 
-        genModel = TrainGANModel.trainGANModel()
+        # genModel = TrainGANModel.trainGANModel()
 
-        model = keras.models.load_model(genModel)
+        # model = keras.models.load_model(genModel)
 
+        model = keras.models.load_model("/users/rsrinivas/deepbind/paper2/deepbind_molgen/model/gan_gen.h5")
         invalidMols = np.load(ConfigFile.getProperty("descriminator.invalid.input"))
 
-        print("Shape of test set %s"%str(invalidMols.shape))
+        print("Shape of test set %s" % str(invalidMols.shape))
 
-        yPred = model.predict(invalidMols[:10,:])
-        print("Shape of predicted output %s"%str(yPred.shape))
+        yPred = model.predict(invalidMols[:1000, :])
+        print("Shape of predicted output %s" % str(yPred.shape))
 
         parallizeAndValidate(yPred)

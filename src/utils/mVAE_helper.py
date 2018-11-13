@@ -28,14 +28,15 @@ global modelVae
 # load charset and model
 def loadmVAEModel():
 
-    print("Loading Autoencoder Model to encode smiles into numeric vectors")
+    print("Loading charset file")
     with open(charset_file, 'r') as outfile:
         charset = json.load(outfile)
 
-    modelVae = MoleculeVAE()
-    modelVae.load(charset, trained_model, latent_rep_size = latent_dim)
-    print("Successfully loaded Autoencoder model")
-    return  charset,modelVae
+    #modelVae = MoleculeVAE()
+    #modelVae.load(charset, trained_model, latent_rep_size = latent_dim)
+    #print("Successfully loaded Autoencoder model")
+    #return  charset,modelVae
+    return  charset
 
 def isValidEncoding(encodingArr):
     """
@@ -57,6 +58,27 @@ def isValidEncoding(encodingArr):
     return None
 
 
+def isValidEncoding_ForSparkWorker(modelVae,encodingArr):
+    try:
+
+        with open(charset_file, 'r') as outfile:
+            charset = json.load(outfile)
+        print("Inside isValidEncoding_ForSparkWorker ")
+        print(charset,modelVae,encodingArr.shape)
+        print("Done isValidEncoding_ForSparkWorker")
+        smiles = decode_latent_molecule(encodingArr, modelVae,
+                                        charset, latent_dim)
+
+        mol = Chem.MolFromSmiles(smiles)
+        if mol:
+            return smiles
+    except Exception, e:
+            print(str(e))
+
+            return  None
+    return None
+
+
 def getCommaSepString(x):
     xstr = np.array_str(x.reshape(292))
     xstr = xstr.replace("[", "")
@@ -66,4 +88,4 @@ def getCommaSepString(x):
     return xstr + "\n"
 
 
-charset,modelVae=loadmVAEModel()
+#charset,modelVae=loadmVAEModel()

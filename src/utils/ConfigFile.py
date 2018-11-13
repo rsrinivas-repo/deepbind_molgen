@@ -4,7 +4,7 @@ import  ConfigParser
 global config
 
 strFilePath= "/Users/raghuramsrinivas/localdrive/education/deepbind/paper2/src/data.properties"
-#strFilePath=
+strFilePath="/users/rsrinivas/deepbind/paper2/deepbind_molgen/src/data.properties"
 
 def getProperty(propName):
 

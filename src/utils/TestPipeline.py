@@ -2,9 +2,12 @@ import pandas as pd
 import numpy as np
 from keras.models import load_model
 from utils import ConfigFile, mVAE_helper
-
+from molgen.SmilesDecoder import  SmilesDecoder
 # model = load_model("../model/gan_gen.pkl")
 
+SmilesDecoder()
+
+"""
 model = load_model("/Users/raghuramsrinivas/localdrive/education/deepbind/paper2/model/gan_gen.pkl")
 noise = np.random.normal(0, 1, (5, 292))
 
@@ -12,14 +15,13 @@ out = model.predict(noise)
 
 # print(out)
 
-"""
 for i in range(0, out.shape[0]):
                                                     
 	retStr = mVAE_helper.isValidEncoding(out[i,:])
 	print(retStr)
 
 print("Done.")
-"""
+
 
 featuresFile = pd.read_csv(ConfigFile.getProperty("implicit.data.file"))
 
@@ -33,3 +35,4 @@ print (tempArr.shape)
 
 featuresFile.loc[40, encodedColNames]
 mVAE_helper.isValidEncoding(tempArr)
+"""
