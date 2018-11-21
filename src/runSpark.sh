@@ -1,11 +1,22 @@
 #!/bin/bash
 START=$(date +%s)
-# do something
-# start your script work here
-python -m controller.SimulateAssays  --runmode test
+
+export deepbind_env='local'
+#export deepbind_env='m2'
+
+#python -m molgen.TrainMolGenModel 
+
+
+#python -m controller.SimulateAssays  --runmode test
+
+python -m controller.SimulateAssays  --runmode genFromImplicit
 
 #python -m utils.TestPipeline
-# your logic ends here
+
+
 END=$(date +%s)
+
+
 DIFF=$(( $END - $START ))
+
 echo "It took $DIFF seconds"
