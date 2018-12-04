@@ -86,6 +86,10 @@ class GenEncodedSMILES(object):
 
     def trainModel(self,targetArr , molregNoArr, latfeatureArr,epochs=5,batch_size=256,learningRate=.01):
 
+        reduce_lr = keras.callbacks.ReduceLROnPlateau(monitor='mae', factor=0.2,
+                                      patience=3, min_lr=0.00001)
+
+
         print("Training model")
         #optimizerFunction = optimizers.Adam(lr=learningRate)
         optimizerFunction = optimizers.Adagrad(lr=learningRate , decay=.0001)
@@ -95,7 +99,7 @@ class GenEncodedSMILES(object):
 
         self.train_history = self.model.fit([targetArr, molregNoArr], latfeatureArr,
                                   epochs=epochs,
-                                  batch_size=batch_size,
+                                  batch_size=batch_size, callbacks=[reduce_lr],
                                   shuffle=False)
 
 
@@ -168,7 +172,7 @@ def trainSeqModel(epochs=5,batch_size=256,learningRate=.000001):
 
     genEncoder = GenEncodedSMILES()
 
-    print("Mode Summary")
+    print("Model Summary")
     print(genEncoder.model.summary())
     ## Train Model
     train_history = genEncoder.trainModel(targetArr, molregNoArr, latfeatureArr,epochs,batch_size,learningRate)
