@@ -8,6 +8,7 @@
       <change beforePath="$PROJECT_DIR$/src/data.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/data.properties" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/mVAE/autoencoder_ipython" beforeDir="false" afterPath="$PROJECT_DIR$/src/mVAE/autoencoder_ipython" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/molgen/TrainMolGenModel.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/molgen/TrainMolGenModel.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/molgen/TrainRNNModel.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/molgen/TrainRNNModel.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -21,11 +22,29 @@
       <file leaf-file-name="TrainMolGenModel.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/molgen/TrainMolGenModel.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="298">
-              <caret line="120" selection-start-line="114" selection-end-line="120" />
+            <state relative-caret-position="488">
+              <caret line="101" column="77" selection-start-line="101" selection-start-column="68" selection-end-line="101" selection-end-column="77" />
               <folding>
                 <element signature="e#149#161#0" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="data.properties" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/data.properties">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="330">
+              <caret line="22" column="103" selection-start-line="22" selection-start-column="80" selection-end-line="22" selection-end-column="103" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Implicit_to_SMILES_RNN.ipynb" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/Implicit_to_SMILES_RNN.ipynb">
+          <provider selected="true" editor-type-id="ipnb-editor">
+            <state>
+              <selected id="0" />
             </state>
           </provider>
         </entry>
@@ -34,75 +53,9 @@
         <entry file="file://$PROJECT_DIR$/src/molgen/TrainRNNModel.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="385">
-              <caret line="84" column="27" selection-start-line="84" selection-start-column="27" selection-end-line="84" selection-end-column="27" />
+              <caret line="127" column="5" selection-start-line="127" selection-start-column="5" selection-end-line="127" selection-end-column="5" />
               <folding>
                 <element signature="e#0#19#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="ConfigFile.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/utils/ConfigFile.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="315">
-              <caret line="21" column="15" selection-start-line="21" selection-start-column="4" selection-end-line="21" selection-end-column="15" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="data.properties" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/data.properties">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="45">
-              <caret line="3" selection-start-line="3" selection-end-line="3" selection-end-column="17" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="utils.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/mVAE/utils.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="377">
-              <caret line="33" column="35" selection-start-line="33" selection-end-line="34" />
-              <folding>
-                <element signature="e#0#11#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="mVAE_helper.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/utils/mVAE_helper.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-65">
-              <caret line="54" column="25" selection-start-line="52" selection-end-line="54" selection-end-column="25" />
-              <folding>
-                <element signature="e#0#18#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="SmilesUtils.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/utils/SmilesUtils.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="300">
-              <caret line="20" column="29" selection-start-line="20" selection-start-column="29" selection-end-line="20" selection-end-column="29" />
-              <folding>
-                <element signature="e#0#22#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="SimulateAssays.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/controller/SimulateAssays.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1965">
-              <caret line="145" column="76" selection-start-line="145" selection-start-column="73" selection-end-line="145" selection-end-column="76" />
-              <folding>
-                <element signature="e#163#177#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -132,6 +85,11 @@
       <find>.</find>
       <find>lea</find>
       <find>save</find>
+      <find>batch_normalization</find>
+      <find>implicit.smiles.data.file</find>
+      <find>Generate encoded smiles string from implicit fingerprints</find>
+      <find>Dropout</find>
+      <find>learning</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -162,14 +120,14 @@
         <option value="$PROJECT_DIR$/src/utils/TestPipeline.py" />
         <option value="$PROJECT_DIR$/src/utils/ConfigFile.py" />
         <option value="$PROJECT_DIR$/src/controller/SimulateAssays.py" />
-        <option value="$PROJECT_DIR$/src/molgen/TrainMolGenModel.py" />
         <option value="$PROJECT_DIR$/src/utils/SmilesUtils.py" />
         <option value="$PROJECT_DIR$/src/data.properties" />
+        <option value="$PROJECT_DIR$/src/molgen/TrainMolGenModel.py" />
         <option value="$PROJECT_DIR$/src/molgen/TrainRNNModel.py" />
       </list>
     </option>
   </component>
-  <component name="ProjectFrameBounds">
+  <component name="ProjectFrameBounds" extendedState="6">
     <option name="y" value="23" />
     <option name="width" value="1280" />
     <option name="height" value="712" />
@@ -180,7 +138,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -191,29 +148,13 @@
             <path>
               <item name="paper2" type="b2602c69:ProjectViewProjectNode" />
               <item name="paper2" type="462c0819:PsiDirectoryNode" />
-              <item name="datagen_scripts" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="paper2" type="b2602c69:ProjectViewProjectNode" />
-              <item name="paper2" type="462c0819:PsiDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="paper2" type="b2602c69:ProjectViewProjectNode" />
-              <item name="paper2" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="molgen" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="paper2" type="b2602c69:ProjectViewProjectNode" />
-              <item name="paper2" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="utils" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
         </subPane>
       </pane>
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -287,7 +228,7 @@
     <frame x="0" y="23" width="1280" height="712" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.26171243" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.2657512" />
       <window_info anchor="bottom" id="TODO" order="6" />
       <window_info anchor="right" id="R Packages" order="4" />
       <window_info anchor="right" id="R Graphics" order="3" />
@@ -308,25 +249,25 @@
       <window_info anchor="bottom" id="Find" order="1" />
     </layout>
     <layout-to-restore>
-      <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
+      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.26171243" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
-      <window_info anchor="right" id="R Graphics" order="3" />
+      <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="bottom" id="TODO" order="6" />
-      <window_info anchor="bottom" id="Version Control" order="8" />
+      <window_info anchor="right" id="R Graphics" order="3" />
       <window_info anchor="bottom" id="Run" order="2" />
+      <window_info anchor="bottom" id="Find" order="1" />
       <window_info anchor="right" id="R Packages" order="4" />
-      <window_info anchor="bottom" id="Message" order="0" />
+      <window_info anchor="bottom" id="Python Console" order="9" visible="true" weight="0.32854864" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info anchor="bottom" id="Terminal" order="7" weight="0.32854864" />
       <window_info anchor="bottom" id="Event Log" order="10" side_tool="true" />
-      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
+      <window_info anchor="bottom" id="Version Control" order="8" />
+      <window_info anchor="bottom" id="Message" order="0" />
       <window_info id="Favorites" order="2" side_tool="true" />
-      <window_info anchor="bottom" id="Find" order="1" />
-      <window_info anchor="bottom" id="Python Console" order="9" visible="true" weight="0.32854864" />
     </layout-to-restore>
   </component>
   <component name="VcsContentAnnotationSettings">
@@ -338,7 +279,6 @@
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/code/datagen/GenerateData_GAN.py" />
     <entry file="file://$PROJECT_DIR$/code/setup.py" />
     <entry file="file://$PROJECT_DIR$/code/__init__.py" />
     <entry file="file://$PROJECT_DIR$/code/utils/ConfigFile.py" />
@@ -412,9 +352,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="251">
           <caret line="93" column="105" lean-forward="true" selection-start-line="91" selection-start-column="4" selection-end-line="93" selection-end-column="105" />
-          <folding>
-            <element signature="e#0#19#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -429,29 +366,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-595">
           <caret line="12" column="19" selection-start-line="12" selection-start-column="6" selection-end-line="12" selection-end-column="19" />
-          <folding>
-            <element signature="e#0#29#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/molgen/TrainGANModel.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="129">
-          <caret line="83" column="75" selection-start-line="83" selection-start-column="12" selection-end-line="83" selection-end-column="75" />
-          <folding>
-            <element signature="e#0#18#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/controller/SimulateAssays.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1965">
-          <caret line="145" column="76" selection-start-line="145" selection-start-column="73" selection-end-line="145" selection-end-column="76" />
-          <folding>
-            <element signature="e#163#177#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -466,9 +380,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="377">
           <caret line="33" column="35" selection-start-line="33" selection-end-line="34" />
-          <folding>
-            <element signature="e#0#11#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -483,43 +394,58 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-65">
           <caret line="54" column="25" selection-start-line="52" selection-end-line="54" selection-end-column="25" />
-          <folding>
-            <element signature="e#0#18#0" expanded="true" />
-          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/controller/SimulateAssays.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="378">
+          <caret line="157" column="118" selection-start-line="157" selection-start-column="48" selection-end-line="157" selection-end-column="118" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/utils/SmilesUtils.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="165">
+          <caret line="11" column="25" selection-start-line="3" selection-end-line="11" selection-end-column="25" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/molgen/TrainGANModel.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-179">
+          <caret line="83" column="75" selection-start-line="83" selection-start-column="12" selection-end-line="83" selection-end-column="75" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/data.properties">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="330">
+          <caret line="22" column="103" selection-start-line="22" selection-start-column="80" selection-end-line="22" selection-end-column="103" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Implicit_to_SMILES_RNN.ipynb">
+      <provider selected="true" editor-type-id="ipnb-editor">
+        <state>
+          <selected id="0" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/molgen/TrainMolGenModel.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="298">
-          <caret line="120" selection-start-line="114" selection-end-line="120" />
+        <state relative-caret-position="488">
+          <caret line="101" column="77" selection-start-line="101" selection-start-column="68" selection-end-line="101" selection-end-column="77" />
           <folding>
             <element signature="e#149#161#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/utils/SmilesUtils.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="300">
-          <caret line="20" column="29" selection-start-line="20" selection-start-column="29" selection-end-line="20" selection-end-column="29" />
-          <folding>
-            <element signature="e#0#22#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/data.properties">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="45">
-          <caret line="3" selection-start-line="3" selection-end-line="3" selection-end-column="17" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/molgen/TrainRNNModel.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="385">
-          <caret line="84" column="27" selection-start-line="84" selection-start-column="27" selection-end-line="84" selection-end-column="27" />
+          <caret line="127" column="5" selection-start-line="127" selection-start-column="5" selection-end-line="127" selection-end-column="5" />
           <folding>
             <element signature="e#0#19#0" expanded="true" />
           </folding>

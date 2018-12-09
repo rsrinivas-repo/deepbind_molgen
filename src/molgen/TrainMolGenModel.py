@@ -133,7 +133,7 @@ def euclidean_distance_loss(y_true, y_pred):
     return K.sqrt(K.sum(K.square(y_pred - y_true), axis=-1))
 
 def loadTrainingFile():
-    dfAllData = pd.read_csv(ConfigFile.getProperty("implicit.data.file"))
+    dfAllData = pd.read_csv(ConfigFile.getProperty("implicit.smiles.data.file"))
     return dfAllData
 
 
@@ -164,7 +164,7 @@ def getTrainingData() :
     print(np.mean(targetArr),np.mean(molregNoArr),np.mean(latfeatureArr),)
     return molregNoArr,targetArr,latfeatureArr
 
-def trainSeqModel(epochs=5,batch_size=256,learningRate=.000001):
+def trainSeqModel(epochs=5,batch_size=256,learningRate=.001):
 
     print("start : Generate encoded smiles string from implicit fingerprints")
 
@@ -186,4 +186,4 @@ def trainSeqModel(epochs=5,batch_size=256,learningRate=.000001):
 
 if __name__ == '__main__':
 
-    trainSeqModel(epochs=2,batch_size=5)
+    trainSeqModel(epochs=20,batch_size=32)
