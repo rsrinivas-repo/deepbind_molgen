@@ -35,6 +35,10 @@ def euclidean_distance_loss(y_true, y_pred):
     """
     return K.sqrt(K.sum(K.square(y_pred - y_true), axis=-1))
 
+def cosine_distance(y_true, y_pred):
+    y_true = K.l2_normalize(y_true, axis=-1)
+    y_pred = K.l2_normalize(y_pred, axis=-1)
+    return -K.mean(y_true * y_pred, axis=-1, keepdims=True)
 
 
 ##This is the map method
@@ -143,11 +147,11 @@ if __name__ == '__main__':
         from molgen import TrainMolGenModel
         import keras
 
-        strFile=TrainMolGenModel.trainSeqModel(epochs=100,batch_size=256,learningRate=.001)
+        #strFile=TrainMolGenModel.trainSeqModel(epochs=100,batch_size=256,learningRate=.001)
 
         strFile = os.path.join(ConfigFile.getProperty("models.dir"), "Implicit_to_Latent.h5")
 
-        print("The Model saved @ %s" % strFile)
+        print("Saved model  @ %s" % strFile)
 
         molregNoArr, targetArr, latfeatureArr = TrainMolGenModel.getTrainingData()
 
@@ -155,45 +159,33 @@ if __name__ == '__main__':
         #molregNoArr = tf.keras.utils.normalize(molregNoArr)
 
 
-        model = keras.models.load_model(strFile ,  custom_objects={'euclidean_distance_loss': euclidean_distance_loss})
-        yPred = model.predict([targetArr, molregNoArr])
+        model = keras.models.load_model(strFile ,  custom_objects={'cosine_distance': cosine_distance})
+        yPred = model.predict(molregNoArr)
 
         print("Shape of predicted file " + str(yPred.shape))
         import random
 
         random_indexes = random.sample(range(0, yPred.shape[0]), 100)
 
-        testArr = yPred[random_indexes, :]
-        YHatArr = latfeatureArr[random_indexes, :]
         parallizeAndValidate(testArr)
 
-"""
+        #YHatArr = latfeatureArr[random_indexes, :]
+        #testArr = yPred[random_indexes, :]
 
-        from sklearn.metrics.pairwise import  euclidean_distances
-        print("Eval Distances")
-        for i in range(0,10):
-            X = testArr[i,:]
-            X=X.reshape(1,X.shape[0])
+        #print("Shape of test Arr %s"%str(testArr.shape))
 
-            Y =YHatArr[i,:]
-            Y = Y.reshape(1, Y.shape[0])
-            print(euclidean_distances(X,Y)
+        #listNewVectors = []
+        #for i in range(0,10):
+        #    stdev = 0.9
+        #    mvaeCount = 1000    #int(ConfigFile.getProperty("mvae.molgen.count"))
+        #    latentSize=int(ConfigFile.getProperty("encoded.feature.size"))
+        #    latent_mols = stdev * np.random.randn(mvaeCount,latentSize) + testArr[i, :]
+        #    print("Shape of latent_mols Arr %s" % str(latent_mols.shape))
+        #    listNewVectors.append(latent_mols)
+        #    parallizeAndValidate(latent_mols)
 
-
-        if False :
-            print("Shape of test Arr %s"%str(testArr.shape))
-            listNewVectors = []
-            for i in range(0,10):
-                stdev = 0.1
-                mvaeCount = int(ConfigFile.getProperty("mvae.molgen.count"))
-                latentSize=int(ConfigFile.getProperty("encoded.feature.size"))
-                latent_mols = stdev * np.random.randn(mvaeCount,latentSize) + testArr[i, :]
-                print("Shape of latent_mols Arr %s" % str(latent_mols.shape))
-                listNewVectors.append(latent_mols)
-                parallizeAndValidate(latent_mols)
-
-            newTestArr = np.array(listNewVectors)
-            print("Shape of new test array %s"%str(newTestArr.shape))
+        #newTestArr = np.array(listNewVectors)
+        #print("Shape of new test array %s"%str(newTestArr.shape))
 
 
 # print("Number of valid predictions %d"% len(self.valid_predictions(yPred)))
@@ -219,4 +211,3 @@ if __name__ == '__main__':
         print("Shape of predicted output %s" % str(yPred.shape))
 
         parallizeAndValidate(yPred)
-"""

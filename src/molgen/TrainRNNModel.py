@@ -13,6 +13,7 @@ import  os
 import numpy as np
 from keras.models import load_model
 import keras
+from keras import optimizers
 
 def euclidean_distance_loss(y_true, y_pred):
     """
@@ -24,6 +25,10 @@ def euclidean_distance_loss(y_true, y_pred):
     """
     return K.sqrt(K.sum(K.square(y_pred - y_true), axis=-1))
 
+def cosine_distance(y_true, y_pred):
+    y_true = K.l2_normalize(y_true, axis=-1)
+    y_pred = K.l2_normalize(y_pred, axis=-1)
+    return -K.mean(y_true * y_pred, axis=-1, keepdims=True)
 
 class RNNModelForSmiles(object):
 
@@ -38,15 +43,15 @@ class RNNModelForSmiles(object):
     def buildModel(self):
 
         print("Building model class")
-        #strModelPath = os.path.join(ConfigFile.getProperty("models.dir"), "Implicit_to_Latent.h5")
-        #loaded_model = load_model(strModelPath,
-        #                        custom_objects={'euclidean_distance_loss': euclidean_distance_loss})
+        strModelPath = os.path.join(ConfigFile.getProperty("models.dir"), "Implicit_to_Latent.h5")
+        loaded_model = load_model(strModelPath,
+                                custom_objects={'cosine_distance': cosine_distance})
         inputLayer = Input(shape=(50,))
 
-        #constructed_layer = loaded_model(inputLayer)
-        #h = Dropout(0.2)(in)
-        #constructed_layer.trainable=False
-        h = Dense(80, name='latent_input_11', activation='relu') (inputLayer)
+        constructed_layer = loaded_model(inputLayer)
+        #h = Dropout(0.2)(constructed_layer)
+        constructed_layer.trainable=False
+        h = Dense(80, name='latent_input_11', activation='relu') (constructed_layer)
         h = Dropout(0.2)(h)
 
         h = Dense(self.max_length, name='latent_input_12', activation='relu') (h)
@@ -83,7 +88,8 @@ class RNNModelForSmiles(object):
 
         self.model = self.buildModel()
 
-        self.model.compile(optimizer='Adam',
+        sgd = optimizers.SGD(lr=.0001)
+        self.model.compile(optimizer=sgd,
                       loss="categorical_crossentropy",
                       metrics=['accuracy'])
 
@@ -118,6 +124,8 @@ def buildAndTrainRNNModel():
     dfFile = pd.read_csv(rnnModel.datafile)
 
     print("Loaded data file")
+
+    print ("Shape of implicit features file %s" % str(dfFile.shape))
     molreg_features = ["%d_mols" % i for i in range(0, 50)]
     molreg_arr = dfFile[molreg_features].values
 

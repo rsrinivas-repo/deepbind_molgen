@@ -9,7 +9,7 @@ from keras.models import Sequential
 from keras.optimizers import Adam
 from utils import ConfigFile
 import os
-
+from sklearn.metrics import precision_score , roc_auc_score , accuracy_score
 
 class GAN(object):
     """ Generative Adversarial Network class """
@@ -33,9 +33,12 @@ class GAN(object):
 
         self.stacked_generator_discriminator.compile(loss='binary_crossentropy', optimizer=self.optimizer)
 	
-        self.GenInput=pd.read_csv(ConfigFile.getProperty("generator.input.data"), delim_whitespace=True)
+        #self.GenInput=pd.read_csv(ConfigFile.getProperty("generator.input.data"), delim_whitespace=True)
 
-        print("Generator data size %s"%str(self.GenInput.shape))
+        self.GenInput = None #np.random.rand(40000,292)
+        #print("Generator data size %s"%str(self.GenInput.shape))
+
+
     def __generator(self):
         """ Declare generator """
         model = Sequential()
@@ -76,7 +79,7 @@ class GAN(object):
 
         return model
 
-    def train(self, x_train, epochs=20000, batch = 32, save_interval = 100):
+    def train(self, x_train, epochs=1000, batch = 32, save_interval = 100):
 
         for cnt in range(epochs):
 
@@ -97,10 +100,19 @@ class GAN(object):
             
             print(self.D.test_on_batch(x_batch,y_batch))
             # train generator
+            yPred = self.D.predict(x_batch)
 
+            yPred = yPred.reshape(yPred.shape[0])
+            yPred =  np.where(yPred > 0.5, 1, 0)
+
+            print("Num of Valids %d "%np.sum(y_batch))
+            print("Precision Score %s"%str(precision_score(y_batch,yPred)))
+
+            print("Accuracy Score %s"%str(accuracy_score(y_batch,yPred)))
+            print("************************************************************************")
             #noise = np.random.normal(-1, 1, (batch, 292))
             
-            noise = self.GenInput.sample(n=batch).as_matrix()
+            noise = np.random.rand(batch,292)#self.GenInput.sample(n=batch).as_matrix()
             y_mislabled = np.ones((batch, 1))
             
             
@@ -128,14 +140,20 @@ def trainGANModel(epochs=10000, batch =32, save_interval = 100) :
     print("Shape of INVALID array %s " % str(invalidMols.shape))
 
     # invalidMols = np.array(random.sample(invalidMols,40000))
-    invalidMols = invalidMols[:40000, :]
+    randomIndex = np.random.randint(50000, size=20000)
+
+    invalidMols = invalidMols[randomIndex, :]
+
     print("Shape of INVALID array after sampling %s " % str(invalidMols.shape))
 
     x_train = np.append(validMols, invalidMols, axis=0)
     print ("Shape of FULL training array %s" % str(x_train.shape))
 
     gan = GAN()
-    gan.train(x_train, epochs=4, batch =10, save_interval = 100)
+
+    gan.GenInput = invalidMols
+
+    gan.train(x_train, epochs, batch , save_interval)
     genModelFile = os.path.join(ConfigFile.getProperty("models.dir"), "gan_gen.h5")
     gan.G.save(genModelFile)
     print("Generative model saved @ %s"%genModelFile)
@@ -143,6 +161,8 @@ def trainGANModel(epochs=10000, batch =32, save_interval = 100) :
 
 if __name__ == '__main__':
 
-    trainGANModel(epochs=4, batch =10, save_interval = 100)
+    genModel = trainGANModel(epochs=300, batch=600, save_interval=100)
+
+
 
 

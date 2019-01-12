@@ -28,7 +28,7 @@ class GenEncodedSMILES(object):
     def constructModel(self):
 
         print("Size of latent dimensions %d"%encoded_feature_size)
-        targetInput = Input(shape=(50,))
+        #targetInput = Input(shape=(50,))
         #x1 = Dense(75, activation='linear')(targetInput)
         #x1 = Dense(100, activation='linear')(x1)
 
@@ -43,16 +43,15 @@ class GenEncodedSMILES(object):
         ####merge function is depreceted - change it next revision
 
         x = Dense(100, activation='selu')(x2)
+        x =keras.layers.Dropout(.25)(x)
         x = Dense(150, activation='selu')(x)
-        #x = Dense(195, activation='selu')(x)
-        #x = Dense(210, activation='selu')(x)
+        x = keras.layers.Dropout(.25)(x)
         x = Dense(225, activation='selu')(x)
-        #x = Dense(250, activation='selu')(x)
-        #x = Dense(265, activation='selu')(x)
-        #x = Dense(275, activation='selu')(x)
+        x = keras.layers.Dropout(.25)(x)
+
         outputLayer = Dense(encoded_feature_size, activation='selu')(x)
 
-        self.model = Model([targetInput, molregnoInput], outputLayer)
+        self.model = Model(molregnoInput, outputLayer)
 
         return  self.model
 
@@ -84,7 +83,7 @@ class GenEncodedSMILES(object):
 
 
 
-    def trainModel(self,targetArr , molregNoArr, latfeatureArr,epochs=5,batch_size=256,learningRate=.01):
+    def trainModel(self , molregNoArr, latfeatureArr,epochs=5,batch_size=256,learningRate=.01):
 
         reduce_lr = keras.callbacks.ReduceLROnPlateau(monitor='mae', factor=0.2,
                                       patience=3, min_lr=0.00001)
@@ -93,11 +92,11 @@ class GenEncodedSMILES(object):
         print("Training model")
         #optimizerFunction = optimizers.Adam(lr=learningRate)
         optimizerFunction = optimizers.Adagrad(lr=learningRate , decay=.0001)
-        self.model.compile(optimizer=optimizerFunction, loss=euclidean_distance_loss ,
+        self.model.compile(optimizer=optimizerFunction, loss=cosine_distance ,
                       metrics=['mae', 'accuracy'])
 
 
-        self.train_history = self.model.fit([targetArr, molregNoArr], latfeatureArr,
+        self.train_history = self.model.fit(molregNoArr, latfeatureArr,
                                   epochs=epochs,
                                   batch_size=batch_size, callbacks=[reduce_lr],
                                   shuffle=False)
@@ -121,6 +120,10 @@ class GenEncodedSMILES(object):
 
         return strModelPath
 
+def cosine_distance(y_true, y_pred):
+    y_true = K.l2_normalize(y_true, axis=-1)
+    y_pred = K.l2_normalize(y_pred, axis=-1)
+    return -K.mean(y_true * y_pred, axis=-1, keepdims=True)
 
 def euclidean_distance_loss(y_true, y_pred):
     """
@@ -141,17 +144,17 @@ def getTrainingData() :
     global encoded_feature_size
     encoded_feature_size=int(ConfigFile.getProperty("encoded.feature.size"))
 
-    targetCols = ["%d_target"%i for i in range(0,50)]
+    #targetCols = ["%d_target"%i for i in range(0,50)]
     molregnoCols =  ["%d_mols"%i for i in range(0,50)]
     latentFeatCols = ["%d_latfeatures"%i for i in range(0,292)]
 
 
     dfTrainingData=loadTrainingFile()
     dfTrainingData=dfTrainingData.drop_duplicates("smiles")
-    dfTrainingData = dfTrainingData.sample(50000)
+    #dfTrainingData = dfTrainingData.sample(100)
 
     ## Extract numpy arrays with target , mol and encoded features
-    targetArr = np.asarray(dfTrainingData.as_matrix(columns=targetCols))
+    #targetArr = np.asarray(dfTrainingData.as_matrix(columns=targetCols))
     molregNoArr = np.asarray(dfTrainingData.as_matrix(columns=molregnoCols))
     latfeatureArr = np.asarray(dfTrainingData.as_matrix(columns=latentFeatCols))
 
@@ -159,23 +162,23 @@ def getTrainingData() :
 
     print("Normalizing input")
     #targetArr =tf.keras.utils.normalize(targetArr)
-    molregNoArr=tf.keras.utils.normalize(molregNoArr)
-    latfeatureArr = keras.utils.normalize(latfeatureArr)
-    print(np.mean(targetArr),np.mean(molregNoArr),np.mean(latfeatureArr),)
-    return molregNoArr,targetArr,latfeatureArr
+    #molregNoArr=tf.keras.utils.normalize(molregNoArr)
+    #latfeatureArr = keras.utils.normalize(latfeatureArr)
+    #print(np.mean(targetArr),np.mean(molregNoArr),np.mean(latfeatureArr),)
+    return molregNoArr,latfeatureArr
 
 def trainSeqModel(epochs=5,batch_size=256,learningRate=.001):
 
     print("start : Generate encoded smiles string from implicit fingerprints")
 
-    molregNoArr, targetArr, latfeatureArr=getTrainingData()
+    molregNoArr, latfeatureArr=getTrainingData()
 
     genEncoder = GenEncodedSMILES()
 
     print("Model Summary")
     print(genEncoder.model.summary())
     ## Train Model
-    train_history = genEncoder.trainModel(targetArr, molregNoArr, latfeatureArr,epochs,batch_size,learningRate)
+    train_history = genEncoder.trainModel(molregNoArr, latfeatureArr,epochs,batch_size,learningRate)
 
     # Save Model
     strModelPath = genEncoder.saveModel()
@@ -186,4 +189,4 @@ def trainSeqModel(epochs=5,batch_size=256,learningRate=.001):
 
 if __name__ == '__main__':
 
-    trainSeqModel(epochs=20,batch_size=32)
+    trainSeqModel(epochs=50,batch_size=32)
