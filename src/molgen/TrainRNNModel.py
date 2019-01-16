@@ -15,6 +15,7 @@ from keras.models import load_model
 import keras
 from keras import optimizers
 
+latent_size = 50
 def euclidean_distance_loss(y_true, y_pred):
     """
     Euclidean distance loss
@@ -25,10 +26,18 @@ def euclidean_distance_loss(y_true, y_pred):
     """
     return K.sqrt(K.sum(K.square(y_pred - y_true), axis=-1))
 
+
 def cosine_distance(y_true, y_pred):
     y_true = K.l2_normalize(y_true, axis=-1)
     y_pred = K.l2_normalize(y_pred, axis=-1)
     return -K.mean(y_true * y_pred, axis=-1, keepdims=True)
+
+def sampler(args):
+    mean, log_stddev = args
+
+    std_norm = K.random_normal(shape=(K.shape(mean)[0], latent_size), mean=0, stddev=1)
+    # sampling from Z~N(μ, σ^2) is the same as sampling from μ + σX, X~N(0,1)
+    return mean + K.exp(log_stddev) * std_norm
 
 class RNNModelForSmiles(object):
 
@@ -39,36 +48,37 @@ class RNNModelForSmiles(object):
         self.max_length =120
 
 
-
     def buildModel(self):
 
-        print("Building model class")
-        strModelPath = os.path.join(ConfigFile.getProperty("models.dir"), "Implicit_to_Latent.h5")
-        loaded_model = load_model(strModelPath,
-                                custom_objects={'cosine_distance': cosine_distance})
+        #print("Building model class")
+        #strModelPath = os.path.join(ConfigFile.getProperty("models.dir"), "Implicit_to_Latent.h5")
+        #loaded_model = load_model(strModelPath,
+        #                        custom_objects={'cosine_distance': cosine_distance})
         inputLayer = Input(shape=(50,))
 
-        constructed_layer = loaded_model(inputLayer)
-        #h = Dropout(0.2)(constructed_layer)
-        constructed_layer.trainable=False
-        h = Dense(80, name='latent_input_11', activation='relu') (constructed_layer)
+
+
+        mean = Dense(latent_size)(inputLayer)
+        log_stddev = Dense(latent_size)(inputLayer)
+
+        latent_vector = Lambda(sampler)([mean, log_stddev])
+
+        h = Dense(80, name='latent_input_11', activation='relu') (inputLayer)
         h = Dropout(0.2)(h)
 
         h = Dense(self.max_length, name='latent_input_12', activation='relu') (h)
         h = Dropout(0.2)(h)
 
+        #h = Dense(self.max_length, name='latent_input', activation='relu') (inputLayer)
+        #h = Reshape((12,10))(h)
+        #h = Convolution1D(10, (9), activation='relu', name='conv_1', padding="same")(h)
+        ##h = Dropout(0.25)(h)
+        #h = Convolution1D(6, (9), activation='relu', name='conv_2' , padding="same")(h)
+        #h = Dropout(0.25)(h)
+        #h = Convolution1D(3, (9), activation='relu', name='conv_3' , padding="same")(h)
+        #h = Dropout(0.25)(h)
 
-        h = Dense(self.max_length, name='latent_input', activation='relu') (inputLayer)
-        #h = Dropout(0.2)(h)
-        h = Reshape((12,10))(h)
-        h = Convolution1D(10, (9), activation='relu', name='conv_1', padding="same")(h)
-        h = Dropout(0.25)(h)
-        h = Convolution1D(6, (9), activation='relu', name='conv_2' , padding="same")(h)
-        h = Dropout(0.25)(h)
-        h = Convolution1D(3, (9), activation='relu', name='conv_3' , padding="same")(h)
-        h = Dropout(0.25)(h)
-
-        h = Flatten(name='flatten_1')(h)
+        #h = Flatten(name='flatten_1')(h)
         h = Dense(60, name='latent_input_1', activation='relu')(h)
         h = Dense(self.max_length, name='latent_input_2', activation='relu')(h)
 
@@ -132,8 +142,8 @@ def buildAndTrainRNNModel():
     yPredArr = np.load(ConfigFile.getProperty("smile.onehot.file"))
     print ("Shape of the one hot encoded file %s"%str(yPredArr.shape))
 
-    #molreg_arr=molreg_arr[:20000,:]
-    #yPredArr=yPredArr[:20000,:,:]
+    molreg_arr=molreg_arr[:20000,:]
+    yPredArr=yPredArr[:20000,:,:]
     rnnModel.trainModel(molreg_arr,yPredArr)
 
 
