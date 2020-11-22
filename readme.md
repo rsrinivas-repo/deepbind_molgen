@@ -1,6 +1,6 @@
 data.properties : for configurable properties
 
-
+Update version 1.0
 GenerateData_GAN.py
 
 This script generates data for valid 292 bits encoding of SMILES code.

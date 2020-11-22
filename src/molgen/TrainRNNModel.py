@@ -58,10 +58,10 @@ class RNNModelForSmiles(object):
 
 
 
-        mean = Dense(latent_size)(inputLayer)
-        log_stddev = Dense(latent_size)(inputLayer)
+        #mean = Dense(latent_size)(inputLayer)
+        #log_stddev = Dense(latent_size)(inputLayer)
 
-        latent_vector = Lambda(sampler)([mean, log_stddev])
+        #latent_vector = Lambda(sampler)([mean, log_stddev])
 
         h = Dense(80, name='latent_input_11', activation='relu') (inputLayer)
         h = Dropout(0.2)(h)
@@ -72,20 +72,20 @@ class RNNModelForSmiles(object):
         #h = Dense(self.max_length, name='latent_input', activation='relu') (inputLayer)
         #h = Reshape((12,10))(h)
         #h = Convolution1D(10, (9), activation='relu', name='conv_1', padding="same")(h)
-        ##h = Dropout(0.25)(h)
+        #h = Dropout(0.25)(h)
         #h = Convolution1D(6, (9), activation='relu', name='conv_2' , padding="same")(h)
         #h = Dropout(0.25)(h)
         #h = Convolution1D(3, (9), activation='relu', name='conv_3' , padding="same")(h)
         #h = Dropout(0.25)(h)
 
         #h = Flatten(name='flatten_1')(h)
-        h = Dense(60, name='latent_input_1', activation='relu')(h)
+        #h = Dense(60, name='latent_input_1', activation='relu')(h)
         h = Dense(self.max_length, name='latent_input_2', activation='relu')(h)
 
         h = RepeatVector(self.max_length, name='repeat_vector')(h)
         h = GRU(501, return_sequences=True, name='gru_1')(h)
-        #h = GRU(501, return_sequences=True, name='gru_2')(h)
-        #h = GRU(501, return_sequences=True, name='gru_3')(h)
+        h = GRU(501, return_sequences=True, name='gru_2')(h)
+        h = GRU(501, return_sequences=True, name='gru_3')(h)
         outputLayer = TimeDistributed(Dense(self.charset_length, activation='softmax'), name='decoded_mean')(h)
 
         model = Model(inputLayer, outputLayer)
@@ -111,7 +111,7 @@ class RNNModelForSmiles(object):
                             molreg_arr,
                             yPredArr,
                             shuffle = True,
-                            epochs = 10,
+                            epochs = 100,
                             batch_size = 600,validation_split=.25 , callbacks=[reduce_lr]
                         )
 
@@ -142,8 +142,8 @@ def buildAndTrainRNNModel():
     yPredArr = np.load(ConfigFile.getProperty("smile.onehot.file"))
     print ("Shape of the one hot encoded file %s"%str(yPredArr.shape))
 
-    molreg_arr=molreg_arr[:20000,:]
-    yPredArr=yPredArr[:20000,:,:]
+    np.random.shuffle(molreg_arr)   #=molreg_arr[:20000,:]
+    np.random.shuffle(yPredArr)     #=yPredArr[:20000,:,:]
     rnnModel.trainModel(molreg_arr,yPredArr)
 
 
