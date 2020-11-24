@@ -1,8 +1,5 @@
-/data/*
 */code/mVAE/*
 *.log
 *.pyc
 *.zip
-/src/build/*
 *.ipynb
-/model/*

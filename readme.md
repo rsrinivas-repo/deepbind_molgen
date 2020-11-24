@@ -1,11 +1,10 @@
-data.properties : for configurable properties
 
 Update version 1.0
-GenerateData_GAN.py
 
-This script generates data for valid 292 bits encoding of SMILES code.
 
-<b>GenerateEncodeSmilesfromImplicitFeatures.py</b>
 
-The code builds and trains a DL model for generatring encoded SMILEs from the implicit target and molecules fingerprints
+This repo contains data and code related to the paper 
+Deep Learning-based Ligand Design using Shared Latent Implicit Fingerprints from Collaborative Filtering
+
+@ https://www.biorxiv.org/content/10.1101/2020.11.18.389213v1
 
